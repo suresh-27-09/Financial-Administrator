@@ -1,0 +1,113 @@
+{% extends "index.html" %}
+
+
+{% block content %}
+
+<div class="card mb-4">
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <h6 class="m-0 font-weight-bold text-primary">Select Your Products </h6>
+  </div>
+  <div class="card-body">        
+     
+    <div class="form-group">
+      <form method="POST" action="{% url 'cart' %}" id='formmsg'>
+        {% csrf_token %}
+      <label for="select2Single">Select Products</label>
+      <select class="select2-single form-control" name="product"  id="selectOption" >
+        <option selected>Select the Product</option>
+        {% for i in products %}     
+        <option value="{{i.pname}}" >{{i.pname}}</option>
+        {% endfor %}
+      </select>
+      
+      <label for="select2Single">Customer Name</label>
+  
+      <input type="text" name="cname" class="form-control" id="inputEmail3"  value="{{ cname }}"  >
+      <input type="hidden" name="email" class="form-control" id="inputEmail3"  value="{{ email }}"  >
+      <input type="hidden" name="mobile" class="form-control" id="inputEmail3"  value="{{ mobile }}"  >
+      <input type="hidden" name="place" class="form-control" id="inputEmail3"  value="{{ place }}"  >
+      {% comment %} <input type="hidden" name="date" class="form-control" id="inputEmail3"  value="{{ date }}"  >
+      <input type="hidden" name="time" class="form-control" id="inputEmail3"  value="{{ time }}"  > {% endcomment %}
+      <label for="select2Single">Quantity</label>
+  
+        <input type="number" name="quantity" class="form-control" id="inputqu" placeholder="Quantity" oninput="myFunction()">
+
+        <label for="select2Single">$Price</label>
+  
+        <input type="number" name="price"  class="form-control" id="inputField" disabled>
+        <label for="select2Single">Total Price</label>
+  
+        <input type="number" name="pri"  class="form-control" id="inputpr" >
+        <label for="selecd2Single">Date</label>
+  
+        <input type="date" name="date" class="form-control" id="inputEmail3" value="{{ date }}" >
+        <label for="select2Single">Time</label>
+  
+        <input type="time" name="time" class="form-control" id="inputEmail3" value="{{ time }}">
+        <br>
+        <div class="col-sm-10">
+          <button type="submit" class="btn btn-primary"> Submit</button>
+        </div>
+        
+      </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $("#selectOption").on("change", function() {
+        var selectedOption = $(this).val();
+        // Send an AJAX request to a Django view
+        $.ajax({
+            url: '{% url 'optionaj' %}', // Replace with the actual URL of your Django view
+            type: 'POST', // Use 'GET' or 'POST' as needed
+            data: {
+                selectedOption: selectedOption
+            },
+            success: function(response) {
+                // Update the input field with the response data
+                $('#inputField').val(response.result)
+
+            }
+        });
+    });
+});
+
+function myFunction() {
+  var price = document.getElementById("inputField").value;
+  var quantity = document.getElementById("inputqu").value;
+  var tot = price*quantity;
+  var totpr=document.getElementById("inputpr");
+  totpr.value = tot;
+}
+
+$(document).ready(function() {
+  $("#inputqu").on("input", function() {
+    var quan = $(this).val();
+    var pro=$('#selectOption').val();
+    $.ajax({
+      url: {% url 'opaj' %},
+      type: 'POST',
+      data:{
+        quan: quan,
+        pro: pro
+      },
+      success:function(response){
+        alert(response.result)
+      }
+    })
+  });
+});
+
+
+
+</script>
+
+
+
+
+                  
+{% endblock %}
+
+
+
+
+
